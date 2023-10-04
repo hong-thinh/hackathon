@@ -73,6 +73,18 @@ def menu():
         print("\nStarting multi target phish -> Employees\n")
         input2 = input(colors.ENDC + colors.BOLD + "Enter path to file of email addresses for multi target phish (ex. /home/user/list.csv): " + colors.ENDC)
         input3 = input(colors.ENDC + colors.BOLD + "Enter Sender Alias (ex. John Doe): " + colors.ENDC)
+        
+        print("Select an language to begin:\n")
+        print("  1) English")
+        print("  2) Japanese")
+        print("  3) Spanish")
+        input4 = input("> ")
+        if(input4 == '1' or input4 == '2' or input4 == '3'):
+            pass
+        else:
+            print("Invalid input! Defaulting to english! ")
+            input4 = '1' 
+
         if input1 == '2':
             confirm = input(colors.GREEN + colors.BOLD + "\nExecute multi target phish to Employees in file: " + input2 + " with Sender Alias: " + input3 + " . Press \"y\" to confirm, press any other key to exit.\n> " + colors.ENDC)
             if confirm == 'y' or confirm == 'Y':
@@ -130,7 +142,7 @@ def translate_text(text, target_language):
     # engine="text-davinci-002",
     model="gpt-3.5-turbo-instruct", 
     prompt=f"Translate the following text into {target_language}: {text}\n", 
-    max_tokens=250, 
+    max_tokens=1000, 
     n=1, 
     stop=None, 
     temperature=0.2) 
