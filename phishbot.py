@@ -13,6 +13,7 @@ import openai
 import shutil
 import time
 from datetime import datetime
+import qrcode
 
 class colors:
     ENDC = '\033[m'
@@ -141,14 +142,14 @@ def ai_gen(input1):
 
 def send_email(user,mail_server,email_to,input1,input2,input3):
     subject,body = ai_gen(input1)
-    url = url_gen(input1)
+    url,qr = url_gen(input1)
     print(colors.GREEN + colors.BOLD + " <>< <><  Sending Phishbot email to " + email_to + " with email Alias " + input3 + " <>< <>< " + colors.ENDC)
     email_from = user
     if input1 == '1' or input1 == '2':
         fullbody = '<html><body><br>' + body + '<br><br><button style="background-color: #008CBA; border: none; color: white; padding: 10px 20px; text-align: center; text-decoration: none; display: inline-block; font-size: 16px; margin: 4px 2px; cursor: pointer;" onclick="window.location.href=\'' + url + '\'">OPEN IN OKTA</button><br><br> Thank you,<br>' + input3 + '</body></html>'
         #fullbody = '<html><body><br>' + body + '<br><br><a href="' + url + '">open Okta</a><br><br> Thank you,<br>' + input3 + '</body></html>'
     if input1 == '3' or input1 == '4':
-        fullbody = '<html><body><br>' + body + '<br><br><a href="' + url + '">open Financial Services</a><br><br> Thank you,<br>' + input3 + '</body></html>'
+        fullbody = '<html><body><br>' + body + '<br><br><img style="margin: 0; border: 0; padding: 0; display: block;" src="https://toyfinancialservices.com/qrcodes/' + qr + '" width="100" height="100"></img ><br><br> Thank you,<br>' + input3 + '</body></html>'
     msg = MIMEMultipart()
     msg['From'] = formataddr((input3, email_from))
     msg['To'] = email_to
@@ -166,12 +167,16 @@ def url_gen(input1):
         dst_file = "/var/www/html/" + t + "_okta"
         url = "http://toyfinancialservices.com/" + t + "_okta"
     elif input1 == '3' or input1 == '4':
-        src_file = "/root/braddev/file.html"
-        dst_file = "/var/www/html/" + t + "_toyotafinancial"
-        url = "http://toyfinancialservices.com/" + t + "_toyotafinancial"
+        src_file = "/opt/hackathon/mobilemain.html"
+        dst_file = "/var/www/html/" + t + "_mobile"
+        url = "https://toyfinancialservices.com/" + t + "_mobile"
+        img = qrcode.make(url)
+        type(img)
+        img.save("/var/www/html/qrcodes/"+t+"qr.png")
+        qr = t+"qr.png"
     shutil.copy(src_file,dst_file)
     print(colors.ENDC + colors.BOLD + "Creating target url: " + url + " ..." + colors.ENDC)
-    return(url)
+    return(url,qr)
 
 def create_log(email_from,email_to,subject,url,body,input1):
     print(colors.ENDC + colors.BOLD + "Create log entry ... \n" + colors.ENDC)
