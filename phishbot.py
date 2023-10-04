@@ -42,10 +42,20 @@ def menu():
         print("\nStarting single target phish -> Employee\n")
         input2 = input(colors.ENDC + colors.BOLD + "Enter Target email address: " + colors.ENDC)
         input3 = input(colors.ENDC + colors.BOLD + "Enter Sender Alias (ex. John Doe): " + colors.ENDC)
+
+        print("Select an language to begin:\n")
+        print("  1) English")
+        print("  2) Japanese")
+        print("  3) Spanish")
+        input4 = input("> ")
+        if(input4 != '1' or input4 != '2' or input4 != '3'):
+            print("Invalid input! Defaulting to english! ")
+            input4 = '1' 
+
         if input1 == '1':
             confirm = input(colors.GREEN + colors.BOLD + "\nExecute single target phish to Employee: " + input2 + " with Sender Alias: " + input3 + " . Press \"y\" to confirm, press any other key to exit.\n> " + colors.ENDC)
             if confirm == 'y' or confirm == 'Y':
-                return(input1, input2, input3)
+                return(input1, input2, input3, input4)
             else:
                 print(colors.RED + colors.BOLD + "\nExiting...\n" + colors.ENDC)
                 sys.exit()
@@ -53,7 +63,7 @@ def menu():
         elif input1 == '3':
             confirm = input(colors.GREEN + colors.BOLD + "\nExecute single target phish to Customer: " + input2 + " with Sender Alias: " + input3 + " . Press \"y\" to confirm, press any other key to exit.\n> " + colors.ENDC)
             if confirm == 'y' or confirm == 'Y':
-                return(input1, input2, input3)
+                return(input1, input2, input3, input4)
             else:
                 print(colors.RED + colors.BOLD +"\nExiting...\n" + colors.ENDC)
                 sys.exit()
@@ -64,14 +74,14 @@ def menu():
         if input1 == '2':
             confirm = input(colors.GREEN + colors.BOLD + "\nExecute multi target phish to Employees in file: " + input2 + " with Sender Alias: " + input3 + " . Press \"y\" to confirm, press any other key to exit.\n> " + colors.ENDC)
             if confirm == 'y' or confirm == 'Y':
-                return(input1, input2, input3)
+                return(input1, input2, input3, input4)
             else:
                 print(colors.RED + colors.BOLD + "\nExiting...\n" + colors.ENDC)
                 sys.exit()
         elif input1 == '4':
             confirm = input(colors.GREEN + colors.BOLD + "\nExecute multi target phish to Customers in file: " + input2 + " with Sender Alias: " + input3 + " . Press \"y\" to confirm, press any other key to exit.\n> " + colors.ENDC)
             if confirm == 'y' or confirm == 'Y':
-                return(input1, input2, input3)
+                return(input1, input2, input3, input4)
             else:
                 print(colors.RED + colors.BOLD + "\nExiting...\n" + colors.ENDC)
                 sys.exit()
@@ -79,10 +89,10 @@ def menu():
         print(colors.RED + colors.BOLD + "\nExiting...\n" + colors.ENDC)
         sys.exit()
 
-def single_phish(input1, input2, input3):
+def single_phish(input1, input2, input3, input4):
     user,mail_server = mail_server_connect()
     email_to = input2
-    send_email(user,mail_server,email_to,input1,input2,input3)
+    send_email(user,mail_server,email_to,input1,input2,input3, input4)
     mail_server.quit()
 
 def multi_phish(input1, input2, input3):
@@ -112,7 +122,19 @@ def mail_server_connect():
     mail_server.login(user, pswd)
     return(user,mail_server)
 
-def ai_gen(input1):
+def translate_text(text, target_language): 
+    response = openai.Completion.create( 
+    
+    # engine="text-davinci-002",
+    model="gpt-3.5-turbo-instruct", 
+    prompt=f"Translate the following text into {target_language}: {text}\n", 
+    max_tokens=250, 
+    n=1, 
+    stop=None, 
+    temperature=0.2) 
+    return response.choices[0].text.strip()
+
+def ai_gen(input1, input4):
     openai.api_key = os.getenv('OPENAI_API_KEY')
     if input1 == '1' or input1 == '2':
         prompt_subject = 'Generate an email subject about updates to Toyota Benefits for employee under 9 words.'
@@ -142,10 +164,43 @@ def ai_gen(input1):
     response_subject = re.sub(r'[^a-zA-Z0-9\s]', '', response_subject)
     response_subject = response_subject.replace('"', '')
     response_body = response_body['choices'][0]['message']['content']
-    return (response_subject, response_body)
 
-def send_email(user, mail_server, email_to, input1, input2, input3):
-    subject, body = ai_gen(input1)
+
+    if input4 == '1':
+        print("-------------------- ENGLISH LANGUAGE --------------------")
+        print('\n')
+        print(response_subject)
+        print('\n')
+        print(response_body)
+        print('\n')
+        return (response_subject, response_body)
+    elif input4 == '2':
+        print("-------------------- JAPANESE LANGUAGE --------------------")
+        response_subject_japanese = translate_text(response_subject, 'JAPANESE')
+        response_body_japanese = translate_text(response_body, 'JAPANESE')
+        print('\n')
+        print(response_subject_japanese)
+        print('\n')
+        print(response_body_japanese)
+        print('\n')
+        return (response_subject_japanese, response_body_japanese)
+    elif input4 == '3':
+        print("-------------------- SPANISH LANGUAGE --------------------")
+        response_subject_spanish = translate_text(response_subject, 'es')
+        response_body_spanish = translate_text(response_body, 'es')
+        print('\n')
+        print(response_subject_spanish)
+        print('\n')
+        print(response_body_spanish)
+        print('\n')
+        return (response_subject_spanish, response_body_spanish)
+
+    else:
+        print("Invalid input! Defaulting to english! ")
+
+
+def send_email(user, mail_server, email_to, input1, input2, input3, input4):    
+    subject, body = ai_gen(input1, input4)
     url, qr = url_gen(input1)
     print(colors.GREEN + colors.BOLD + " <>< <><  Sending Phishbot email to " + email_to + " with email Alias " + input3 + " <>< <>< " + colors.ENDC)
     email_from = user
@@ -196,9 +251,9 @@ def main():
     logo()
     input1, input2, input3 = menu()
     if input1 == '1' or input1 == '3':
-        single_phish(input1, input2, input3)
+        single_phish(input1, input2, input3, input4)
     if input1 == '2' or input1 == '4':
-        multi_phish(input1, input2, input3)
+        multi_phish(input1, input2, input3, input4)
 
 if __name__ == "__main__":
     main()
