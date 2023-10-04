@@ -118,6 +118,7 @@ def ai_gen(input1):
         prompt_subject = 'Generate an email subject about updates to Toyota Benefits for employee under 9 words. Make sure there are no special chracters and and dates included.'
         prompt_subject = re.sub(r'[^a-zA-Z0-9\s]', '', prompt_subject)
         prompt_subject = prompt_subject.replace('"', '')
+        print(prompt_subject)
         prompt_body = f'Generate the body of an email with respect to {prompt_subject}, but not more than 40 words.Do NOT USE DATE AND TIME in the email.DO NOT CREATE EMAIL SUBJECT. USE Toyota Financial Services in the Regards. If no name is mentioned use Dear toyota Employee.'
     elif input1 == '3' or input1 == '4':
         prompt_subject = 'Generate an email subject about updates to Toyota Benefits for customer under 9 words. Make sure there are no special chracters and and dates included.'
