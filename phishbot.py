@@ -181,32 +181,14 @@ def ai_gen(input1, input4):
 
 
     if input4 == '1':
-        print("-------------------- ENGLISH LANGUAGE --------------------")
-        print('\n')
-        print(response_subject)
-        print('\n')
-        print(response_body)
-        print('\n')
         return (response_subject, response_body)
     elif input4 == '2':
-        print("-------------------- JAPANESE LANGUAGE --------------------")
         response_subject_japanese = translate_text(response_subject, 'JAPANESE')
         response_body_japanese = translate_text(response_body, 'JAPANESE')
-        print('\n')
-        print(response_subject_japanese)
-        print('\n')
-        print(response_body_japanese)
-        print('\n')
         return (response_subject_japanese, response_body_japanese)
     elif input4 == '3':
-        print("-------------------- SPANISH LANGUAGE --------------------")
         response_subject_spanish = translate_text(response_subject, 'es')
         response_body_spanish = translate_text(response_body, 'es')
-        print('\n')
-        print(response_subject_spanish)
-        print('\n')
-        print(response_body_spanish)
-        print('\n')
         return (response_subject_spanish, response_body_spanish)
 
     else:
