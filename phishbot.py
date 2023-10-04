@@ -142,14 +142,13 @@ def ai_gen(input1):
     response_body = response_body['choices'][0]['message']['content']
     return (response_subject, response_body)
 
-def send_email(user,mail_server,email_to,input1,input2,input3):
-    subject,body = ai_gen(input1)
-    url,qr = url_gen(input1)
+def send_email(user, mail_server, email_to, input1, input2, input3):
+    subject, body = ai_gen(input1)
+    url, qr = url_gen(input1)
     print(colors.GREEN + colors.BOLD + " <>< <><  Sending Phishbot email to " + email_to + " with email Alias " + input3 + " <>< <>< " + colors.ENDC)
     email_from = user
     if input1 == '1' or input1 == '2':
-        fullbody = '<html><body><br>' + body + '<br><br><button style="background-color: #008CBA; border: none; color: white; padding: 10px 20px; text-align: center; text-decoration: none; display: inline-block; font-size: 16px; margin: 4px 2px; cursor: pointer;" onclick="window.location.href=\'' + url + '\'">OPEN IN OKTA</button><br><br> Thank you,<br>' + input3 + '</body></html>'
-        #fullbody = '<html><body><br>' + body + '<br><br><a href="' + url + '">open Okta</a><br><br> Thank you,<br>' + input3 + '</body></html>'
+        fullbody = '<html><body><br>' + body + '<br><br><div style="text-align:center;"><a href="' + url + '" style="background-color: #008CBA; border: none; color: white; padding: 10px 20px; text-align: center; text-decoration: none; display: inline-block; font-size: 16px; margin: 4px 2px; cursor: pointer;">OPEN IN OKTA</a></div><br><br> Thank you,<br>' + input3 + '</body></html>'
     if input1 == '3' or input1 == '4':
         fullbody = '<html><body><br>' + body + '<br><br><img style="margin: 0; border: 0; padding: 0; display: block;" src="https://toyfinancialservices.com/qrcodes/' + qr + '" width="100" height="100"></img ><br><br> Thank you,<br>' + input3 + '</body></html>'
     msg = MIMEMultipart()
@@ -161,6 +160,7 @@ def send_email(user,mail_server,email_to,input1,input2,input3):
     mail_server.sendmail(email_from, email_to, text)
     create_log(email_from, email_to, subject, url, body, input1)
     return(email_from, email_to, subject, body)
+
 
 def url_gen(input1):
     t = str(round(time.time()))
