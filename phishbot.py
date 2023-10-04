@@ -130,8 +130,7 @@ def ai_gen(input1):
             {"role": "user", "content": prompt_subject}
         ]
     )
-    response_subject = re.sub(r'[^a-zA-Z0-9\s]', '', response_subject)
-    response_subject = response_subject.replace('"', '')
+
 
     # Call the OpenAI API to generate email bodies
     response_body = openai.ChatCompletion.create(
@@ -141,6 +140,8 @@ def ai_gen(input1):
         ]
     )
     response_subject = response_subject['choices'][0]['message']['content']
+    response_subject = re.sub(r'[^a-zA-Z0-9\s]', '', response_subject)
+    response_subject = response_subject.replace('"', '')
     response_body = response_body['choices'][0]['message']['content']
     return (response_subject, response_body)
 
