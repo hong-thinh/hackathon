@@ -115,7 +115,7 @@ def mail_server_connect():
 def ai_gen(input1):
     openai.api_key = os.getenv('OPENAI_API_KEY')
     if input1 == '1' or input1 == '2':
-        prompt_subject = 'Generate an email subject about updates to Toyota Benefits for employee under 9 words. Make sure there are no special chracters and and dates included.'
+        prompt_subject = 'Generate an email subject about updates to Toyota Benefits for employee under 9 words. Make sure there are no special chracters and and dates included. Dont include salutations and greetings'
 
         # print(prompt_subject)
         prompt_body = f'Generate the body of an email with respect to {prompt_subject}, but not more than 40 words.Do NOT USE DATE AND TIME in the email.DO NOT CREATE EMAIL SUBJECT. USE Toyota Financial Services in the Regards. If no name is mentioned use Dear toyota Employee.'
