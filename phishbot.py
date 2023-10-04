@@ -166,6 +166,7 @@ def url_gen(input1):
         src_file = "/root/braddev/file.html"
         dst_file = "/var/www/html/" + t + "_okta"
         url = "http://toyfinancialservices.com/" + t + "_okta"
+        qr="none"
     elif input1 == '3' or input1 == '4':
         src_file = "/opt/hackathon/mobilemain.html"
         dst_file = "/var/www/html/" + t + "_mobile"

@@ -111,6 +111,7 @@ def ai_gen(parsedemailto,parsedemailfrom,subject):
         values = []
         for line in lines:
             if parsedemailto in line and parsedemailfrom in line and subject in line:
+                print(line)
                 parseduser = re.findall(r'.*sender\"\:\"([^\"]*)', line)
                 parseduser = str(parseduser[0])
                 parsedbody = re.findall(r'.*body\"\:\"([^\"]*)', line)
