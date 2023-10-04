@@ -100,26 +100,43 @@ def create_reply_log(parsedemailfrom,parsedemailto,aibody,subject):
     l.close
 
 def ai_gen(parsedemailto,parsedemailfrom,subject):
+
+    openai.api_key = os.getenv('OPENAI_API_KEY')  
+
     print("creating ai reply body")
-    subject = re.sub(r'^....','',subject)
+    subject = re.sub(r'^....', '', subject)
+
     with open(r'/opt/hackathon/phishbot.log', 'r') as fp:
         lines = fp.readlines()
         values = []
         for line in lines:
-            if line.find(parsedemailto) != -1:
-                if line.find(parsedemailfrom) != -1:
-                    if line.find(subject) != 1:
-                        parseduser = re.findall(r'.*aiuser\"\:\"(system|user)', line)
-                        parseduser = str(parseduser[0])
-                        parsedbody = re.findall(r'.*body\"\:\"([^\"]*)', line)
-                        parsedbody = str(parsedbody[0])
-                        data = '{"role": "' + parseduser + '", "content": "' + parsedbody + '"}'
-                        values.append(data)
+            if parsedemailto in line and parsedemailfrom in line and subject in line:
+                parseduser = re.findall(r'.*sender\"\:\"([^\"]*)', line)
+                parseduser = str(parseduser[0])
+                parsedbody = re.findall(r'.*body\"\:\"([^\"]*)', line)
+                parsedbody = str(parsedbody[0])
+                data = f'"{parseduser}: {parsedbody}"'
+                values.append(data)
 
+        # Construct the prompt for OpenAI
+        conversation = [
+            {
+                "role": "user",
+                "content": f"Here is an email conversation between {parsedemailfrom} and {parsedemailto}:\n\n{' '.join(values)}\n\nHave {parsedemailto} reply to {parsedemailfrom} to get them to perform the requested action"
+            }
+        ]
 
-    aibody = "Reply Body Here"
-    phishtype = '1'
-    return(aibody,phishtype)
+        # Use OpenAI to generate the response
+        response = openai.Completion.create(
+            model="gpt-3.5-turbo",
+            message=conversation
+        )
+
+        aibody = response["choices"][0]["message"]["content"].strip()
+        phishtype = '1'
+
+        return aibody, phishtype
+
 
 
 
