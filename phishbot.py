@@ -48,7 +48,9 @@ def menu():
         print("  2) Japanese")
         print("  3) Spanish")
         input4 = input("> ")
-        if(input4 != '1' or input4 != '2' or input4 != '3'):
+        if(input4 == '1' or input4 == '2' or input4 == '3'):
+            pass
+        else:
             print("Invalid input! Defaulting to english! ")
             input4 = '1' 
 
@@ -95,7 +97,7 @@ def single_phish(input1, input2, input3, input4):
     send_email(user,mail_server,email_to,input1,input2,input3, input4)
     mail_server.quit()
 
-def multi_phish(input1, input2, input3):
+def multi_phish(input1, input2, input3, input4):
     user,mail_server = mail_server_connect()
     try:
         email_list = open(input2, 'r')
@@ -107,7 +109,7 @@ def multi_phish(input1, input2, input3):
     emails = email_list.readlines()
     for email in emails:
         email_to = email.rstrip('\n')
-        send_email(user,mail_server,email_to,input1,input2,input3)
+        send_email(user,mail_server,email_to,input1,input2,input3, input4)
         time.sleep(1)
     mail_server.quit()
 
@@ -249,7 +251,7 @@ def create_log(email_from,email_to,subject,url,body,input1):
 
 def main():
     logo()
-    input1, input2, input3 = menu()
+    input1, input2, input3, input4 = menu()
     if input1 == '1' or input1 == '3':
         single_phish(input1, input2, input3, input4)
     if input1 == '2' or input1 == '4':
