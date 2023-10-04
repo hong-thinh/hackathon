@@ -116,11 +116,11 @@ def ai_gen(input1):
     openai.api_key = os.getenv('OPENAI_API_KEY')
     if input1 == '1' or input1 == '2':
         prompt_subject = 'Generate an email subject about updates to Toyota Benefits for employee under 9 words. Make sure there are no special chracters and and dates included.'
-        prompt_body = f'Please generate the main content of the email without any subject, salutation, or greetings. Generate the main content of an email with respect to {prompt_subject}, but not more than 40 words.'
+        prompt_body = f'Please generate the main content of the email with respect to {prompt_subject} without any subject, salutation, or greetings.'
     
     elif input1 == '3' or input1 == '4':
         prompt_subject = 'Generate an email subject about updates to Toyota Benefits for customer under 9 words. Make sure there are no special chracters and and dates included.'
-        prompt_body = f'Please generate the main content of the email without any subject, salutation, or greetings. Generate the main content of an email with respect to {prompt_subject}, but not more than 40 words.'
+        prompt_body = f'Please generate the main content of the email with respect to {prompt_subject} without any subject, salutation, or greetings.'
 
     # Call the OpenAI API to generate email subjects
     response_subject = openai.ChatCompletion.create(
