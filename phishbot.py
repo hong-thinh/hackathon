@@ -211,7 +211,7 @@ def send_email(user, mail_server, email_to, input1, input2, input3, input4):
     msg.attach(MIMEText(fullbody, 'html'))
     text = msg.as_string()
     mail_server.sendmail(email_from, email_to, text)
-    create_log(email_from, email_to, subject, url, body, input1)
+    create_log(email_from, email_to, subject, url, body, input1, input4)
     return(email_from, email_to, subject, body)
 
 
@@ -234,11 +234,17 @@ def url_gen(input1):
     print(colors.ENDC + colors.BOLD + "Creating target url: " + url + " ..." + colors.ENDC)
     return(url,qr)
 
-def create_log(email_from,email_to,subject,url,body,input1):
+def create_log(email_from,email_to,subject,url,body,input1,input4):
     print(colors.ENDC + colors.BOLD + "Create log entry ... \n" + colors.ENDC)
     body = re.sub(r'(\r|\n)',r'', body)
+    if input4 == 2:
+        language = "japanese"
+    elif input4 == 3:
+        language = "spanish"
+    else:
+        language = "english"
     logdate = (datetime.now()).strftime("%m/%d/%Y %H:%M:%S")
-    log_output = '{"timestamp":"' + logdate + '","phishtype":"' + input1 + '","action":"send_initial_phish","aiuser":"system","sender":"' + email_from + '","recipient":"' + email_to + '","subject":"' + subject + '","phishurl":"' + url + '","body":"' + body + '"}\n'
+    log_output = '{"timestamp":"' + logdate + '","phishtype":"' + input1 + '","action":"send_initial_phish","aiuser":"system","sender":"' + email_from + '","recipient":"' + email_to + '","subject":"' + subject + '","phishurl":"' + url + '","body":"' + body + '","language":"' + language + '"}\n'
     l = open("/opt/hackathon/phishbot.log", "a")
     l.write(log_output)
     l.close
